@@ -6,6 +6,8 @@ const { verifyToken } = require("../middleware/middleware");
 router.post("/:customerId/orders", verifyToken, async (req, res) => {
   const customerId = req.params.customerId;
   const { eateryId, foodItems } = req.body;
+  console.log(req.body,"mintu food");
+
 
   if (foodItems.length === 0) {
     return res.status(404).json({ message: "No Food Item found in order" });
@@ -20,23 +22,23 @@ router.post("/:customerId/orders", verifyToken, async (req, res) => {
       [eateryId, customerId]
     );
 
-    for (const foodItemId of foodItems) {
-      if (foodItemId != null) {
+    for (const foodItem of foodItems) {
+      if (foodItem != null) {
         await connection.execute(
-          "INSERT IGNORE INTO OrderFoodItemMapping (order_id, food_item_id) VALUES (?, ?)",
-          [insertResult.insertId, foodItemId]
+          "INSERT IGNORE INTO OrderFoodItemMapping (order_id, food_item_id, quantity) VALUES (?, ?, ?)",
+          [insertResult.insertId, foodItem.id, foodItem.quantity]
         );
       }
     }
     await connection.commit();
 
-    res.status(200).json({ message: "Order placed successfully" });
+    res.status(200).json({ message: "Order placed successfully", orderId : insertResult.insertId});
   } catch (error) {
     console.error("Error executing query", error);
-    if (pool) {
+    if (connection) {
         try {
           // Rollback the transaction in case of an error
-          await pool.rollback();
+          await connection.rollback();
         } catch (rollbackError) {
           console.error("Error rolling back transaction", rollbackError);
         }
@@ -69,14 +71,15 @@ router.get("/:customerId/orders", verifyToken, async (req, res) => {
       for (const order of orders) {
         const [foodItems] = await pool.execute(
           `SELECT
-          ofim.food_item_id,
-          fi.name,
-          fi.description,
-          fi.price,
-          fi.category_id
-        FROM OrderFoodItemMapping ofim
-        JOIN FoodItems fi ON ofim.food_item_id = fi.id
-        WHERE ofim.order_id = ?`,
+    ofim.food_item_id,
+    ofim.quantity,
+    fi.name,
+    fi.description,
+    fi.price,
+    fi.category_id
+FROM OrderFoodItemMapping ofim
+JOIN FoodItems fi ON ofim.food_item_id = fi.id
+WHERE ofim.order_id = ?`,
           [order.id]
         );
         order.foodItems = foodItems;
@@ -105,6 +108,7 @@ router.get("/:customerId/orders/:orderId", verifyToken, async (req, res) => {
     const [foodItems] = await pool.execute(
       `SELECT
           ofim.food_item_id,
+          ofim.quantity,
           fi.name,
           fi.description,
           fi.price,

@@ -3,7 +3,7 @@ const router = express.Router();
 const pool = require("../db");
 const { verifyToken } = require("../middleware/middleware");
 
-router.get("/:customerId/eateries", verifyToken, async (req, res) => {
+router.get("/:customerId/eateries",verifyToken, async (req, res) => {
   const customerId = req.params.customerId;
 
   try {
@@ -53,7 +53,7 @@ router.get("/:customerId/eateries/:eateryId", verifyToken, async (req, res) => {
       const [FoodItems] = await pool.execute(rowCheckingQuery, [eateryId]);
   
       if (FoodItems.length === 0) {
-        return res.status(404).json({ message: "No Food Items found" });
+        return res.status(400).json({ message: "No Food Items found" });
       } else {
         return res.status(200).json({ restaurantFoodItems: FoodItems });
       }

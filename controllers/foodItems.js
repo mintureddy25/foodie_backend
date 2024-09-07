@@ -66,7 +66,8 @@ router.post("/:eateryId/foodItems", verifyToken, async (req, res) => {
 router.put("/:eateryId/foodItems/:foodItemId", verifyToken, async (req, res) => {
     const eateryId = req.params.eateryId;
     const foodItemId = req.params.foodItemId;
-    const { name, description, price, categoryId } = req.body;
+    const { name, description, price, categoryId, available } = req.body;
+    console.log("mintu price",price);
   
     if (!isNotEmpty(name)) {
       res.status(400).json({ message: "Invalid Food item name" });
@@ -97,9 +98,9 @@ router.put("/:eateryId/foodItems/:foodItemId", verifyToken, async (req, res) => 
       
         const [result] = await pool.execute(
             `UPDATE FoodItems
-             SET name = ?, description = ?, price = ?, category_id = ?
+             SET name = ?, description = ?, price = ?, category_id = ?, available = ?
              WHERE id = ?`,
-            [name, description, price, categoryId, foodItemId]);
+            [name, description, price, categoryId, available, foodItemId]);
   
       res.status(200).json({ message: 'Food Item updated successfully' });
     } catch (error) {
@@ -108,8 +109,8 @@ router.put("/:eateryId/foodItems/:foodItemId", verifyToken, async (req, res) => 
     }
   });
 
-  router.get('/:eateryId/foodItems/:foodItemId', verifyToken, async (req, res) => {
-    const eateryId = req.params.eateryId;
+  router.get('/foodItems/:foodItemId', verifyToken, async (req, res) => {
+    
     const foodItemId = req.params.foodItemId;
 
     try {
@@ -129,7 +130,7 @@ router.put("/:eateryId/foodItems/:foodItemId", verifyToken, async (req, res) => 
         } else {
             return res
                 .status(200)
-                .json({ FoodItem: FoodItemDetails[0] });
+                .json({ foodItem: FoodItemDetails[0] });
         }
         
     } catch (error) {
@@ -149,7 +150,7 @@ router.put("/:eateryId/foodItems/:foodItemId", verifyToken, async (req, res) => 
     } else {
         return res
             .status(200)
-            .json({ FoodItems: foodItemsRows });
+            .json({ foodItems: foodItemsRows });
     }
     
     } catch (error) {

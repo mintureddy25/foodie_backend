@@ -50,3 +50,12 @@ CREATE TABLE OrderFoodItemMapping (
     FOREIGN KEY (order_id) REFERENCES Orders(id),
     FOREIGN KEY (food_item_id) REFERENCES FoodItems(id)
 );
+-- Inserting additional food items into the table
+
+INSERT INTO food_items (id, name, description, price, eatery_id, category_id, status) VALUES
+(5, 'vegetable biryani', 'fragrant rice with mixed vegetables', 600, 1, 3, 1),
+(6, 'fish curry', 'spicy and tangy curry with fish', 750, 2, 4, 1),
+(7, 'prawn masala', 'tender prawns in a rich masala sauce', 900, 2, 4, 1),
+(8, 'paneer tikka', 'grilled paneer with spices', 500, 1, 5, 1),
+(9, 'mushroom risotto', 'creamy risotto with mushrooms', 650, 3, 6, 1);
+

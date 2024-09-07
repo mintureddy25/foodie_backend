@@ -19,6 +19,7 @@ const foodItemsRouter = require("./controllers/foodItems");
 const eateryOrderRouter = require("./controllers/eatery");
 const customerRouter = require("./controllers/customer");
 const customerOrderRouter = require("./controllers/order");
+const foodCategories = require("./controllers/category");
 
 
 
@@ -27,10 +28,12 @@ app.use("/customer", customerLoginRouter);
 app.use("/customer", customerSignupRouter);
 app.use("/eatery", eateryLoginRouter);
 app.use("/eatery", eaterySignupRouter);
-app.use("/eatery", foodItemsRouter );
-app.use("/eatery", eateryOrderRouter);
-app.use("/customer", customerRouter);
-app.use("/customer", customerOrderRouter)
+app.use("/eateries", foodItemsRouter );
+app.use("/eateries", eateryOrderRouter);
+app.use("/customers", customerRouter);
+app.use("/customers", customerOrderRouter);
+app.use(foodCategories);
+
 
 
 // Start the server
