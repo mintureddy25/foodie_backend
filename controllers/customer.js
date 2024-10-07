@@ -84,6 +84,28 @@ router.get("/:customerId/eateries/:eateryId", verifyToken, async (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     }
   });
+//   const start = [parseInt(startX), parseInt(startY)];
+//   const end = [parseInt(endX), parseInt(endY)];
+
+//   // Validate input
+//   if (
+//     !Number.isInteger(start[0]) || !Number.isInteger(start[1]) ||
+//     !Number.isInteger(end[0]) || !Number.isInteger(end[1]) ||
+//     grid[start[0]] === undefined || grid[end[0]] === undefined ||
+//     grid[start[0]][start[1]] === undefined || grid[end[0]][end[1]] === undefined
+//   ) {
+//     return res.status(400).send('Invalid start or end point');
+//   }
+
+//   const visited = new Set();
+//   const path = dfs(start[0], start[1], end, visited, []);
+
+//   if (path) {
+//     return res.json({ path });
+//   } else {
+//     return res.status(404).send('Path not found');
+//   }
+// });
 
 
 
